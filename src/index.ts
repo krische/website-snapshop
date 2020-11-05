@@ -104,14 +104,21 @@ app.get('/tweet', (req, res): void => {
 
       await setValue(page, 'textarea#text', tweet.text);
 
-      if (tweet.retweets) {
+      if (tweet.retweets !== undefined) {
         await setValue(page, 'input#retweets', tweet.retweets.toString());
       }
-      if (tweet.retweetsWithComments) {
+      if (tweet.retweetsWithComments !== undefined) {
         await setValue(page, 'input#retweetsWithComments', tweet.retweetsWithComments.toString());
       }
-      if (tweet.likes) {
+      if (tweet.likes !== undefined) {
         await setValue(page, 'input#likes', tweet.likes.toString());
+      }
+      if (tweet.verified === 'false') {
+        await page.$$eval('input#verified', checks => checks.forEach((c: any) => {
+          if (c.checked) {
+            c.click();
+          }
+        }));
       }
     },
     launchOptions: {
