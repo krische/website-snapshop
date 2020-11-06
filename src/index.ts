@@ -92,6 +92,7 @@ app.get('/tweet', (req, res): void => {
   captureWebsite.buffer('https://lluiscamino.github.io/fake-tweet/', {
     height: 1200,
     element: '.tweet',
+    styles: ['.App { background-color: #000 !important; }'], // remove weird white top and bottom border
     beforeScreenshot: async (page) => {
       await setValue(page, 'input#nickname', tweet.nickname);
       await setValue(page, 'input#name', tweet.name);

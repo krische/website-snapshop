@@ -10,6 +10,7 @@
     "lint:fix": "eslint --fix src/**/*.ts",
     "test": "jasmine-ts --config=jasmine-ts.json",
     "test:coverage": "ts-node node_modules/nyc/bin/nyc.js npm test",
+    "prestart": "npm run build",
     "start": "node ./dist/index.js"
   },
   "author": "Abe",
