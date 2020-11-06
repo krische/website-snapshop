@@ -115,7 +115,7 @@ app.get('/tweet', (req, res): void => {
         await setValue(page, 'input#likes', tweet.likes.toString());
       }
       if (tweet.verified === 'false') {
-        await page.$$eval('input#verified', checks => checks.forEach((c: any) => {
+        await page.$$eval('input#verified', (checks) => checks.forEach((c: any) => {
           if (c.checked) {
             c.click();
           }
