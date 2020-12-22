@@ -24,7 +24,7 @@ RUN chmod +x /usr/local/bin/dumb-init
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 COPY . /app/
-WORKDIR app
+WORKDIR /app
 
 RUN npm install && npm run build
 
@@ -38,8 +38,8 @@ RUN groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
 USER pptruser
 
 # Set port to use
-ENV PORT 80
-EXPOSE 80
+ENV PORT 8080
+EXPOSE 8080
 
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["npm", "start"]
