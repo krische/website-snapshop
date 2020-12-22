@@ -31,6 +31,7 @@ app.get('/spy', (req, res): void => {
     return;
   }
 
+  console.log('Fetching SPY visualization');
   captureWebsite.buffer('https://finviz.com/map.ashx', {
     width: 1200,
     height: 2000,
@@ -56,6 +57,7 @@ app.get('/etf', (req, res): void => {
     return;
   }
 
+  console.log('Fetching ETF visualization');
   captureWebsite.buffer('https://finviz.com/map.ashx?t=etf', {
     width: 1200,
     height: 2000,
@@ -89,6 +91,7 @@ app.get('/tweet', (req, res): void => {
   }
 
   const tweet = req.query as any;
+  console.log('Fetching Tweet screenshot');
   captureWebsite.buffer('https://lluiscamino.github.io/fake-tweet/', {
     height: 1200,
     element: '.tweet',
