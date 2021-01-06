@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import * as captureWebsite from 'capture-website';
+import morgan from 'morgan';
 import { Page } from 'puppeteer';
 
 require('dotenv').config();
@@ -11,6 +12,7 @@ const apiKey = process.env.API_KEY;
 
 const app = express();
 app.use(cors());
+app.use(morgan('combined'));
 let port = process.env.PORT;
 if (port === undefined || port.trim() === '') {
   port = 8080 as any;
