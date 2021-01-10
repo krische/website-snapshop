@@ -11,6 +11,7 @@ const launchOptions = process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD === 'true' ? 
 const apiKey = process.env.API_KEY;
 
 const app = express();
+app.set('trust proxy', true);
 app.use(cors());
 app.use(morgan('combined'));
 let port = process.env.PORT;
