@@ -79,6 +79,32 @@ app.get('/etf', (req, res): void => {
   });
 });
 
+app.get('/world', (req, res): void => {
+  if (apiKey !== undefined && res.getHeader('API_KEY') !== apiKey) {
+    res.status(403);
+    res.end('API_KEY required');
+    return;
+  }
+
+  console.log('Fetching ETF visualization');
+  captureWebsite.buffer('https://finviz.com/map.ashx?t=geo', {
+    width: 1200,
+    height: 2000,
+    timeout: 90000,
+    element: 'canvas.chart',
+    launchOptions: {
+      ...launchOptions,
+      args: ['--no-sandbox'],
+    },
+  }).then((buffer) => {
+    res.writeHead(200, {
+      'Content-Type': 'image/png',
+      'Content-Length': Buffer.byteLength(buffer),
+    });
+    res.end(buffer);
+  });
+});
+
 const setValue = async (page: Page, selector: string, value: string): Promise<void> => {
   await page.evaluate((selectorName) => {
     document.querySelector(selectorName).value = '';
