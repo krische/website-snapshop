@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import * as captureWebsite from 'capture-website';
 import morgan from 'morgan';
-import { Page } from 'puppeteer';
 
 require('dotenv').config();
 
@@ -38,7 +37,7 @@ app.get('/spy', (req, res): void => {
   captureWebsite.buffer('https://finviz.com/map.ashx', {
     width: 1200,
     height: 2000,
-    timeout: 90000,
+    timeout: 30,
     element: 'canvas.chart',
     launchOptions: {
       ...launchOptions,
@@ -64,7 +63,7 @@ app.get('/etf', (req, res): void => {
   captureWebsite.buffer('https://finviz.com/map.ashx?t=etf', {
     width: 1200,
     height: 2000,
-    timeout: 90000,
+    timeout: 30,
     element: 'canvas.chart',
     launchOptions: {
       ...launchOptions,
@@ -90,7 +89,7 @@ app.get('/world', (req, res): void => {
   captureWebsite.buffer('https://finviz.com/map.ashx?t=geo', {
     width: 1200,
     height: 2000,
-    timeout: 90000,
+    timeout: 30,
     element: 'canvas.chart',
     launchOptions: {
       ...launchOptions,
@@ -105,10 +104,16 @@ app.get('/world', (req, res): void => {
   });
 });
 
-const setValue = async (page: Page, selector: string, value: string): Promise<void> => {
-  await page.evaluate((selectorName) => {
+const setValue = async (page: any, selector: string, value: string): Promise<void> => {
+  await page.evaluate((selectorName: any) => {
     document.querySelector(selectorName).value = '';
   }, selector);
+
+  // The page only seems to update on key presses, and backspace alone doesn't work
+  await page.focus(selector);
+  await page.keyboard.press('a');
+  await page.keyboard.press('Backspace');
+
   await page.type(selector, value);
 };
 
@@ -124,18 +129,27 @@ app.get('/tweet', (req, res): void => {
   captureWebsite.buffer('https://lluiscamino.github.io/fake-tweet/', {
     height: 1200,
     element: '.tweet',
-    styles: ['.App { background-color: #000 !important; }'], // remove weird white top and bottom border
     beforeScreenshot: async (page) => {
       await setValue(page, 'input#nickname', tweet.nickname);
       await setValue(page, 'input#name', tweet.name);
       await setValue(page, 'input#avatar', tweet.avatar);
-      await page.select('select#display', 'lightsout');
+      if (tweet.verified === 'false') {
+        await page.$$eval('input#verified', (checks) => checks.forEach((c: any) => {
+          if (c.checked) {
+            c.click();
+          }
+        }));
+      }
+      await page.select('select#display', 'dim');
+      await setValue(page, 'textarea#text', tweet.text);
+      await setValue(page, 'textarea#image', '');
 
       const date = new Date();
-      await setValue(page, 'input#date',
-        date.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
-
-      await setValue(page, 'textarea#text', tweet.text);
+      await setValue(
+        page,
+        'input#date',
+        date.toLocaleString('en-US', { timeZone: 'America/Chicago' }),
+      );
 
       if (tweet.retweets !== undefined) {
         await setValue(page, 'input#retweets', tweet.retweets.toString());
@@ -145,13 +159,6 @@ app.get('/tweet', (req, res): void => {
       }
       if (tweet.likes !== undefined) {
         await setValue(page, 'input#likes', tweet.likes.toString());
-      }
-      if (tweet.verified === 'false') {
-        await page.$$eval('input#verified', (checks) => checks.forEach((c: any) => {
-          if (c.checked) {
-            c.click();
-          }
-        }));
       }
     },
     launchOptions: {
