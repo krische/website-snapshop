@@ -173,3 +173,29 @@ app.get('/tweet', (req, res): void => {
     res.end(buffer);
   });
 });
+
+app.get('/vaccine-wi', (req, res): void => {
+  if (apiKey !== undefined && res.getHeader('API_KEY') !== apiKey) {
+    res.status(403);
+    res.end('API_KEY required');
+    return;
+  }
+
+  console.log('Fetching Wisconsin Vaccine visualization');
+  captureWebsite.buffer('https://bi.wisconsin.gov/t/DHS/views/VaccinesAdministeredtoWIResidents/VaccinatedWisconsin-County', {
+    width: 1200,
+    height: 2000,
+    timeout: 30,
+    element: '#tab-dashboard-region',
+    launchOptions: {
+      ...launchOptions,
+      args: ['--no-sandbox'],
+    },
+  }).then((buffer) => {
+    res.writeHead(200, {
+      'Content-Type': 'image/png',
+      'Content-Length': Buffer.byteLength(buffer),
+    });
+    res.end(buffer);
+  });
+});

@@ -1,6 +1,6 @@
 {
   "name": "website-snapshot",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "take a pic of a webpage",
   "main": "./dist/index.js",
   "scripts": {
