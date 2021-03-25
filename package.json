@@ -1,6 +1,6 @@
 {
   "name": "website-snapshot",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "take a pic of a webpage",
   "main": "./dist/index.js",
   "scripts": {
@@ -15,13 +15,15 @@
   "author": "Abe",
   "license": "ISC",
   "dependencies": {
-    "capture-website": "^1.2.8",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "eslint-import-resolver-typescript": "^2.3.0",
     "express": "^4.17.1",
     "morgan": "^1.10.0",
-    "puppeteer": "^5.4.0",
+    "puppeteer": "^5.5.0",
+    "puppeteer-extra": "^3.1.18",
+    "puppeteer-extra-plugin-adblocker": "^2.11.11",
+    "puppeteer-extra-plugin-stealth": "^2.7.6",
     "temp": "^0.9.4"
   },
   "devDependencies": {
