@@ -39,7 +39,7 @@ export default async (dose: 'first' | 'complete'): Promise<Buffer> => {
 
     // Load Page
     await page.setViewport({ width: 1200, height: 1200 });
-    await page.goto('https://bi.wisconsin.gov/t/DHS/views/VaccinesAdministeredtoWIResidents/VaccinatedWisconsin-County', { waitUntil: 'networkidle2' });
+    await page.goto('https://bi.wisconsin.gov/t/DHS/views/VaccinesAdministeredtoWIResidents_16129838459350/VaccinatedWisconsin-County', { waitUntil: 'networkidle2' });
     await page.waitForSelector('input[name="[Parameters].[Parameter 3]"]', { timeout: 20000 });
 
     if (dose === 'complete') {
