@@ -38,8 +38,9 @@ export default async (dose: 'first' | 'complete'): Promise<Buffer> => {
     page = await browser.newPage();
 
     // Load Page
+    const url: string = process.env.VACCINEWI_URL ? process.env.VACCINEWI_URL : 'https://bi.wisconsin.gov/t/DHS/views/VaccinesAdministeredtoWIResidents_16212677845310/VaccinatedWisconsin-County';
     await page.setViewport({ width: 1200, height: 1200 });
-    await page.goto('https://bi.wisconsin.gov/t/DHS/views/VaccinesAdministeredtoWIResidents_16129838459350/VaccinatedWisconsin-County', { waitUntil: 'networkidle2' });
+    await page.goto(url, { waitUntil: 'networkidle2' });
     await page.waitForSelector('input[name="[Parameters].[Parameter 3]"]', { timeout: 20000 });
 
     if (dose === 'complete') {
